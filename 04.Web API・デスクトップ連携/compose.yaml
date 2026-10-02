@@ -1,0 +1,12 @@
+name: reports-java-native-04
+services:
+  server:
+    build:
+      context: ..
+      dockerfile: 04.Web API・デスクトップ連携/Server/Dockerfile
+    ports: ["127.0.0.1:${SAMPLE_PORT:-19304}:8080"]
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:8080/health"]
+      interval: 2s
+      timeout: 4s
+      retries: 60

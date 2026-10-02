@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<PrintDefine>
+<PrintSetting Name="レポート定義ファイル" Ver="1.00" >
+<PrintAttrs>
+<FontAttr AttrName="Font1" Name="ＭＳ ゴシック" Size="9" />
+<FontAttr AttrName="Font2" Name="ＭＳ Ｐゴシック" Size="9" Color="ff00c0c0" Bold="True" />
+<FontAttr AttrName="Font3" Name="Arial Black" Size="9" Bold="True" />
+<FontAttr AttrName="Font4" Name="ＭＳ Ｐゴシック" Size="9" Bold="True" />
+<LineAttr AttrName="Line1" Width="0.3" />
+<LineAttr AttrName="Line2" Width="0" />
+<LineAttr AttrName="Line3" Color="ffc0ffff" Width="3" />
+<LineAttr AttrName="Line4" Color="ff0000c0" Width="1" />
+<LineAttr AttrName="Line5" Color="0" Width="1" />
+</PrintAttrs>
+<Paper Size="A4" Direction="True" />
+<Design FontAttr="Font1" LineAttr="Line1" GridWidth="2" GridFit="True" ObjLock="False" DesignScale="79.5" />
+</PrintSetting>
+<PrintObjects>
+<Square Name="Square2" X="-2" Y="-4" Width="318" Height="214" LineAttr="Line2" PaintColor="ffc0ffff" R="0" >
+</Square>
+<Square Name="Square1" X="2" Y="2" Width="274" Height="70" LineAttr="Line3" PaintColor="ffffffc0" R="0" >
+</Square>
+<Text Name="説明" X="44" Y="74" Width="170" Height="100" Text="・海外製品の翻訳版ではなく、日本の帳票に要求される機能を盛り込んだ
+　帳票作成ツールとして独自に開発した製品です。
+
+・多機能デザイナーでフレシキブルな帳票設計が可能です。
+
+・ＰＯＰやチラシ等にも使える柔軟な文字装飾機能を提供します。
+
+・帳票定義は仕様公開されたXMLファイルです。デザイナーを用いない設計や、
+　独自プログラムから帳票定義を動的生成する事等が可能です。
+
+・複数種類の帳票を1度に印刷(プレビュー)が可能です。
+
+・印刷データをそのままXMLファイルに保存し、それを読み込む事が可能です。
+
+・ユーザプログラムからは、従来の多くのツールが採用していた各イベントに
+　コードを書く形式ではなく、1箇所に印刷コードを書いて制御する形式です。
+" Elastic="True" OutLineWidth="1" OutLineColor="LightCoral" Align="Left" FontAttr="Font2" />
+<Square Name="Square3" X="10" Y="176" Width="164" Height="26" LineAttr="Line3" PaintColor="Red" R="0" >
+</Square>
+<ArtText Name="キャッチフレーズ" X="6" Y="10" Width="266" Height="22" FontName="ＭＳ Ｐゴシック" FontBold="True" Color="Blue" OutLineWidth="0.3" OutLineColor="White" PileRate="40" DelimiterProcess="True" DelimiterString=",." DelimiterPileRater="40" ShearStretch="True" ShadowX="2" ShadowY="2" ShadowColor="DarkGray" ShadowLineColor="DeepSkyBlue" ShadowLineWidth="0" Text=".NET 開発環境下でのレポート作成ツールの決定版！!" />
+<ArtText Name="製品名" X="-4" Y="20" Width="202" Height="56" FontName="Arial Black" FontBold="True" Color="Red" OutLineWidth="0.6" OutLineColor="White" PileRate="50" DelimiterProcess="True" DelimiterString=",." DelimiterPileRater="30" ShearX="-0.35" ShearStretch="True" ShadowX="3" ShadowY="3" ShadowColor="Gray" ShadowLineColor="DeepSkyBlue" ShadowLineWidth="0.3" Text="Reports.NET" />
+<ArtText Name="価格" X="40" Y="176" Width="118" Height="28" FontName="Times New Roman" FontBold="True" Color="White" OutLineWidth="0.1" OutLineColor="Red" PileRate="50" PileOrderLeftFront="True" DelimiterProcess="True" DelimiterString=",." DelimiterPileRater="40" ShearX="-0.35" ShearStretch="True" Text="48,000" />
+<ArtText Name="ArtText4" X="14" Y="188" Width="32" Height="12" FontName="ＭＳ Ｐ明朝" FontBold="True" Color="White" DelimiterProcess="True" DelimiterString=",." DelimiterPileRater="40" ShearStretch="True" Text="標準価格" />
+<ArtText Name="ArtText5" X="140" Y="186" Width="34" Height="18" FontName="Times New Roman" FontBold="True" Color="White" OutLineWidth="0.3" OutLineColor="White" PileRate="40" DelimiterProcess="True" DelimiterString=",." DelimiterPileRater="40" ShearX="-0.35" ShearStretch="True" Text="円" />
+<Text Name="Field3" X="176" Y="180" Width="16" Height="14" Text="（有）" Elastic="True" Align="Left" FontAttr="Font3" />
+<ArtText Name="ArtText6" X="176" Y="194" Width="82" Height="8" FontName="ＭＳ Ｐ明朝" FontBold="True" Color="ff0000c0" PileRate="40" DelimiterProcess="True" DelimiterString=",.:/" DelimiterPileRater="20" ShearStretch="True" Text="http://www.pao.ac/" />
+<Text Name="商品コード" X="222" Y="38" Width="48" Height="8" Text="4912345678904" Elastic="True" Align="Left" FontAttr="Font4" />
+<Barcode Name="JANコード" X="218" Y="48" Width="52" Height="16" StartStop="False" Soeji="True" Kintou="False" FontAttr="Font1" Kind="JAN13" Code="491234567890" WriteDirect="True" />
+<Text Name="Field5" X="192" Y="178" Width="64" Height="18" Text="Pao＠Office" Elastic="True" Align="Left" FontAttr="Font3" />
+<Text Name="Field6" X="192" Y="38" Width="30.4" Height="8" Text="商品コード：" Elastic="True" Align="Left" FontAttr="Font4" />
+<Square Name="Square5" X="14" Y="76" Width="26" Height="96" Angle="-5.7" LineAttr="Line4" R="0" >
+</Square>
+<ArtText Name="売り文句" X="14" Y="76" Width="26" Height="96" Angle="-5.658951" BackColor="White" WriteVertically="True" FontName="ＭＳ ゴシック" FontBold="True" Color="Red" OutLineWidth="0.3" OutLineColor="White" PileRate="20" DelimiterProcess="True" DelimiterString=",." DelimiterPileRater="40" ShearStretch="True" ShadowX="1.5" ShadowY="1.5" ShadowColor="Gray" ShadowLineColor="DeepSkyBlue" ShadowLineWidth="0.3" Text="絶賛販売中" />
+<Image Name="画像1" X="216" Y="74" Width="58" Height="44" LineAttr="Line5" />
+<Image Name="画像2" X="216" Y="124" Width="58" Height="44" LineAttr="Line5" />
+<Barcode Name="QR" X="260" Y="178" Width="24" Height="24" QrVersion="6" QrErrCorrect="M" Kind="QRCode" Code="123456789012" WriteDirect="True" />
+</PrintObjects>
+</PrintDefine>

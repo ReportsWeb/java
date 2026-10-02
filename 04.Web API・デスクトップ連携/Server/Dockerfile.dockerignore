@@ -1,0 +1,11 @@
+**
+!common/
+!common/database/
+!common/database/sample.db
+!04.Web API・デスクトップ連携/
+!04.Web API・デスクトップ連携/Server/
+!04.Web API・デスクトップ連携/Server/**
+**/.gradle
+**/build
+**/output
+**/.git

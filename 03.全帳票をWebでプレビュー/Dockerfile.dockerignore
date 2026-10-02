@@ -1,0 +1,10 @@
+**
+!common/
+!common/database/
+!common/database/sample.db
+!03.全帳票をWebでプレビュー/
+!03.全帳票をWebでプレビュー/**
+**/.gradle
+**/build
+**/output
+**/.git

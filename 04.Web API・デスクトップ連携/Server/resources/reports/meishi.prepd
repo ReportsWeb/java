@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<PrintDefine>
+<PrintSetting Name="レポート定義ファイル" Ver="1.00" >
+<PrintAttrs>
+<FontAttr AttrName="Font1" Name="BIZ UDPゴシック" Size="9" />
+<FontAttr AttrName="Font2" Name="BIZ UDPゴシック" Size="8.25" Color="DimGray" Bold="True" />
+<FontAttr AttrName="Font3" Name="BIZ UDPゴシック" Size="9.75" Color="Blue" Bold="True" Underline="True" />
+<LineAttr AttrName="Line1" Width="0.3" />
+</PrintAttrs>
+<Paper Size="A4" Direction="False" />
+<Design FontAttr="Font1" LineAttr="Line1" GridWidth="1" GridFit="True" ObjLock="False" DesignScale="100" />
+</PrintSetting>
+<PrintObjects>
+<ArtText Name="a" X="13" Y="11" Width="45" Height="11" FontName="Arial Black" FontBold="True" Color="Navy" OutLineWidth="0.3" OutLineColor="White" PileRate="40" DelimiterProcess="True" DelimiterString=",." DelimiterPileRater="40" ShearX="-0.35" ShearStretch="True" ShadowX="1.5" ShadowY="1.5" ShadowColor="Silver" ShadowLineColor="DeepSkyBlue" ShadowLineWidth="0.3" Text="Pao@Office" IntervalY="55" Repeat="5" />
+<ArtText Name="名前" X="45" Y="28" Width="31" Height="8" FontName="HG丸ｺﾞｼｯｸM-PRO" FontBold="True" Color="DarkSlateGray" OutLineWidth="0.1" OutLineColor="Gainsboro" PileRate="30" DelimiterProcess="True" DelimiterString=",." DelimiterPileRater="40" ShearStretch="True" ShadowX="1.5" ShadowY="1.5" ShadowColor="Silver" ShadowLineColor="DeepSkyBlue" ShadowLineWidth="0.3" Text="村井　　　　誠" IntervalY="55" Repeat="5" />
+<ArtText Name="肩書き" X="43" Y="24" Width="25" Height="3" FontName="HG正楷書体-PRO" FontBold="True" Color="DarkSlateGray" PileRate="40" DelimiterProcess="True" DelimiterString=",." DelimiterPileRater="40" ShearStretch="True" ShadowX="0.5" ShadowY="0.5" ShadowColor="Silver" ShadowLineColor="Silver" ShadowLineWidth="0.3" Text="代表取締役" IntervalY="55" Repeat="5" />
+<ArtText Name="b" X="28" Y="41" Width="14" Height="4" FontName="BIZ UDPゴシック" FontBold="True" Color="DimGray" OutLineWidth="0.2" OutLineColor="Transparent" DelimiterProcess="True" DelimiterString=",." DelimiterPileRater="40" ShearStretch="True" ShadowX="1.5" ShadowY="1.5" ShadowColor="Silver" ShadowLineColor="DeepSkyBlue" ShadowLineWidth="0.3" Text="有限会社" IntervalY="55" Repeat="5" />
+<ArtText Name="c" X="44" Y="40" Width="40" Height="6" FontName="BIZ UDPゴシック" FontBold="True" Color="DimGray" OutLineWidth="0.2" OutLineColor="Transparent" DelimiterProcess="True" DelimiterString=",." DelimiterPileRater="40" ShearStretch="True" ShadowX="1.5" ShadowY="1.5" ShadowColor="Silver" ShadowLineColor="DeepSkyBlue" ShadowLineWidth="0.3" Text="パオ･アット･オフィス" IntervalY="55" Repeat="5" />
+<ArtText Name="メール" X="20" Y="46" Width="20" Height="4" FontName="BIZ UDPゴシック" FontBold="True" Color="DimGray" PileRate="40" DelimiterProcess="True" DelimiterString=",." DelimiterPileRater="40" ShearStretch="True" ShadowX="1.5" ShadowY="1.5" ShadowColor="Silver" ShadowLineColor="DeepSkyBlue" ShadowLineWidth="0.3" Text="pao@pao.ac" IntervalY="55" Repeat="5" />
+<ArtText Name="携帯" X="47" Y="46" Width="21" Height="4" FontName="BIZ UDPゴシック" FontBold="True" Color="DimGray" PileRate="40" DelimiterProcess="True" DelimiterString=",." DelimiterPileRater="40" ShearStretch="True" ShadowX="1.5" ShadowY="1.5" ShadowColor="Silver" ShadowLineColor="DeepSkyBlue" ShadowLineWidth="0.3" Text="090-4006-0641" IntervalY="55" Repeat="5" />
+<Text Name="g" X="25" Y="51" Width="73" Height="5" Text="本　　　社　〒275-0026　千葉県習志野市谷津3-29-2-401
+　　　　　　TEL:047-452-0057　FAX:047-452-0064" Elastic="True" Align="Left" FontAttr="Font2" IntervalY="55" Repeat="5" />
+<Text Name="f" X="69" Y="46" Width="29" Height="4" Text="http://www.pao.ac/" Elastic="True" Align="Left" FontAttr="Font3" IntervalY="55" Repeat="5" />
+<Text Name="h" X="25" Y="56" Width="73" Height="5" Text="東京事務所　〒105-0004　東京都港区新橋1-8-3 住友新橋ビル7F
+　　　　　　TEL:03-3572-6507　FAX:03-6218-0128" Elastic="True" Align="Left" FontAttr="Font2" IntervalY="55" Repeat="5" />
+<Barcode Name="QR" X="16" Y="21" Width="20" Height="20" QrVersion="5" QrErrCorrect="M" Kind="QRCode" Code="MECARD:N:村井誠;SOUND:ﾑﾗｲﾏｺﾄ;TEL:090-4006-0641;EMAIL:pao@pao.ac;;" WriteDirect="True" IntervalY="55" Repeat="5" />
+<ArtText Name="d" X="14" Y="46" Width="7" Height="4" FontName="BIZ UDPゴシック" FontBold="True" Color="DimGray" PileRate="40" DelimiterProcess="True" DelimiterString=",." DelimiterPileRater="40" ShearStretch="True" ShadowX="1.5" ShadowY="1.5" ShadowColor="Silver" ShadowLineColor="DeepSkyBlue" ShadowLineWidth="0.3" Text="mail: " IntervalY="55" Repeat="5" />
+<ArtText Name="e" X="41" Y="46" Width="6" Height="4" FontName="BIZ UDPゴシック" FontBold="True" Color="DimGray" PileRate="40" DelimiterProcess="True" DelimiterString=",." DelimiterPileRater="40" ShearStretch="True" ShadowX="1.5" ShadowY="1.5" ShadowColor="Silver" ShadowLineColor="DeepSkyBlue" ShadowLineWidth="0.3" Text="携帯" IntervalY="55" Repeat="5" />
+<ArtText Name="a2" X="103" Y="11" Width="45" Height="11" FontName="Arial Black" FontBold="True" Color="Navy" OutLineWidth="0.3" OutLineColor="White" PileRate="40" DelimiterProcess="True" DelimiterString=",." DelimiterPileRater="40" ShearX="-0.35" ShearStretch="True" ShadowX="1.5" ShadowY="1.5" ShadowColor="Silver" ShadowLineColor="DeepSkyBlue" ShadowLineWidth="0.3" Text="Pao@Office" IntervalY="55" Repeat="5" />
+<ArtText Name="名前2" X="135" Y="28" Width="31" Height="8" FontName="HG丸ｺﾞｼｯｸM-PRO" FontBold="True" Color="DarkSlateGray" OutLineWidth="0.1" OutLineColor="Gainsboro" PileRate="30" DelimiterProcess="True" DelimiterString=",." DelimiterPileRater="40" ShearStretch="True" ShadowX="1.5" ShadowY="1.5" ShadowColor="Silver" ShadowLineColor="DeepSkyBlue" ShadowLineWidth="0.3" Text="村井　　　　誠" IntervalY="55" Repeat="5" />
+<ArtText Name="肩書き2" X="133" Y="24" Width="25" Height="3" FontName="HG正楷書体-PRO" FontBold="True" Color="DarkSlateGray" PileRate="40" DelimiterProcess="True" DelimiterString=",." DelimiterPileRater="40" ShearStretch="True" ShadowX="0.5" ShadowY="0.5" ShadowColor="Silver" ShadowLineColor="Silver" ShadowLineWidth="0.3" Text="代表取締役" IntervalY="55" Repeat="5" />
+<ArtText Name="b2" X="118" Y="41" Width="14" Height="4" FontName="BIZ UDPゴシック" FontBold="True" Color="DimGray" OutLineWidth="0.2" OutLineColor="Transparent" DelimiterProcess="True" DelimiterString=",." DelimiterPileRater="40" ShearStretch="True" ShadowX="1.5" ShadowY="1.5" ShadowColor="Silver" ShadowLineColor="DeepSkyBlue" ShadowLineWidth="0.3" Text="有限会社" IntervalY="55" Repeat="5" />
+<ArtText Name="c2" X="134" Y="40" Width="40" Height="6" FontName="BIZ UDPゴシック" FontBold="True" Color="DimGray" OutLineWidth="0.2" OutLineColor="Transparent" DelimiterProcess="True" DelimiterString=",." DelimiterPileRater="40" ShearStretch="True" ShadowX="1.5" ShadowY="1.5" ShadowColor="Silver" ShadowLineColor="DeepSkyBlue" ShadowLineWidth="0.3" Text="パオ･アット･オフィス" IntervalY="55" Repeat="5" />
+<ArtText Name="メール2" X="110" Y="46" Width="20" Height="4" FontName="BIZ UDPゴシック" FontBold="True" Color="DimGray" PileRate="40" DelimiterProcess="True" DelimiterString=",." DelimiterPileRater="40" ShearStretch="True" ShadowX="1.5" ShadowY="1.5" ShadowColor="Silver" ShadowLineColor="DeepSkyBlue" ShadowLineWidth="0.3" Text="pao@pao.ac" IntervalY="55" Repeat="5" />
+<ArtText Name="携帯2" X="137" Y="46" Width="21" Height="4" FontName="BIZ UDPゴシック" FontBold="True" Color="DimGray" PileRate="40" DelimiterProcess="True" DelimiterString=",." DelimiterPileRater="40" ShearStretch="True" ShadowX="1.5" ShadowY="1.5" ShadowColor="Silver" ShadowLineColor="DeepSkyBlue" ShadowLineWidth="0.3" Text="090-4006-0641" IntervalY="55" Repeat="5" />
+<Text Name="g2" X="116" Y="51" Width="72" Height="5" Text="本　　　社　〒275-0026　千葉県習志野市谷津3-29-2-401
+　　　　　　TEL:047-452-0057　FAX:047-452-0064" Elastic="True" Align="Left" FontAttr="Font2" IntervalY="55" Repeat="5" />
+<Text Name="f2" X="159" Y="46" Width="29" Height="4" Text="http://www.pao.ac/" Elastic="True" Align="Left" FontAttr="Font3" IntervalY="55" Repeat="5" />
+<Text Name="h2" X="116" Y="56" Width="72" Height="5" Text="東京事務所　〒105-0004　東京都港区新橋1-8-3 住友新橋ビル7F
+　　　　　　TEL:03-3572-6507　FAX:03-6218-0128" Elastic="True" Align="Left" FontAttr="Font2" IntervalY="55" Repeat="5" />
+<Barcode Name="QR2" X="106" Y="21" Width="20" Height="20" QrVersion="5" QrErrCorrect="M" Kind="QRCode" Code="MECARD:N:村井誠;SOUND:ﾑﾗｲﾏｺﾄ;TEL:090-4006-0641;EMAIL:pao@pao.ac;;" WriteDirect="True" IntervalY="55" Repeat="5" />
+<ArtText Name="d2" X="104" Y="46" Width="7" Height="4" FontName="BIZ UDPゴシック" FontBold="True" Color="DimGray" PileRate="40" DelimiterProcess="True" DelimiterString=",." DelimiterPileRater="40" ShearStretch="True" ShadowX="1.5" ShadowY="1.5" ShadowColor="Silver" ShadowLineColor="DeepSkyBlue" ShadowLineWidth="0.3" Text="mail: " IntervalY="55" Repeat="5" />
+<ArtText Name="e2" X="131" Y="46" Width="6" Height="4" FontName="BIZ UDPゴシック" FontBold="True" Color="DimGray" PileRate="40" DelimiterProcess="True" DelimiterString=",." DelimiterPileRater="40" ShearStretch="True" ShadowX="1.5" ShadowY="1.5" ShadowColor="Silver" ShadowLineColor="DeepSkyBlue" ShadowLineWidth="0.3" Text="携帯" IntervalY="55" Repeat="5" />
+</PrintObjects>
+</PrintDefine>

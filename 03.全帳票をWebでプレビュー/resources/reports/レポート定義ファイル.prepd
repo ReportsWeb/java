@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<PrintDefine>
+<PrintSetting Name="レポート定義ファイル" Ver="1.00" >
+<PrintAttrs>
+<FontAttr AttrName="Font1" Name="BIZ UDPゴシック" Size="9" />
+<FontAttr AttrName="Font2" Name="BIZ UDPゴシック" Size="24" />
+<FontAttr AttrName="Font3" Name="BIZ UDPゴシック" Size="20.25" />
+<LineAttr AttrName="Line1" Width="0.3" />
+<LineAttr AttrName="Line2" Width="0.2" Style="Dot" />
+</PrintAttrs>
+<Paper Size="A5" Direction="False" />
+<Design FontAttr="Font1" LineAttr="Line1" GridWidth="2" GridFit="True" ObjLock="False" DesignScale="100" X="0" Y="0" Width="0" Height="0" />
+</PrintSetting>
+<PrintObjects>
+<Text Name="行番号" X="24" Y="34" Width="20" Height="10" Text="行番号" Align="Center" FontAttr="Font2" IntervalY="10" Repeat="15" />
+<Text Name="10倍数" X="68" Y="34" Width="30" Height="10" Text="10倍数" Align="Right" FontAttr="Font2" IntervalY="10" Repeat="15" />
+<Text Name="日付" X="18" Y="4" Width="110" Height="10" Text="日付" Align="Left" FontAttr="Font2" />
+<Text Name="頁数" X="76" Y="18" Width="60" Height="10" Text="頁数" Align="Right" FontAttr="Font2" />
+<Line Name="Line1" StartX="14" StartY="34" EndX="128" EndY="34" LineAttr="Line1" />
+<Line Name="横線" StartX="14" StartY="44" EndX="128" EndY="44" LineAttr="Line1" IntervalY="10" Repeat="15" />
+<Line Name="Line3" StartX="20" StartY="14" EndX="128" EndY="14" LineAttr="Line2" />
+<Text Name="フォントサイズ" X="14" Y="18" Width="58" Height="12" Text="フォントサイズ" Align="Left" FontAttr="Font3" />
+</PrintObjects>
+</PrintDefine>
