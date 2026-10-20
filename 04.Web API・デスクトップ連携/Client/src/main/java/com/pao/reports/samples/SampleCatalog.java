@@ -7,7 +7,9 @@ import java.util.*;
 
 final class SampleCatalog {
     record SamplePage(ReportDocument definition, ReportData data, int sourcePage) {}
-    record Sample(String name, ReportDocument definition, ReportData data, List<SamplePage> pages, String canonicalSourceJson, List<String> diagnostics) {
+    /** warnings（項目 8）：定義の読み込みの警告。サーバーの見出し x-reports-image-diagnostics に入れる。 */
+    record Sample(String name, ReportDocument definition, ReportData data, List<SamplePage> pages, String canonicalSourceJson, List<String> diagnostics, List<ObjectDiagnostic> warnings) {
+        Sample(String name, ReportDocument definition, ReportData data, List<SamplePage> pages, String canonicalSourceJson, List<String> diagnostics){this(name,definition,data,pages,canonicalSourceJson,diagnostics,List.of());}
         Sample(String name,ReportDocument definition,ReportData data,List<SamplePage> pages){this(name,definition,data,pages,null,List.of());}
         Sample(String name, ReportDocument definition, ReportData data) {
             this(name, definition, data, ordinaryPages(definition, data));
@@ -21,7 +23,7 @@ final class SampleCatalog {
         for (var page : job.pages) pages.add(new SamplePage(page.definition, page.data, page.sourcePage));
         var first = job.pages.getFirst();
         return new Sample(job.name == null || job.name.isBlank() ? "Reports.web / Pure Java" : job.name,
-                first.definition, first.data, List.copyOf(pages),job.canonicalSourceJson,List.copyOf(job.diagnostics));
+                first.definition, first.data, List.copyOf(pages),job.canonicalSourceJson,List.copyOf(job.diagnostics),job.warnings==null?List.of():List.copyOf(job.warnings));
     }
 
     static PreviewJob toPreviewJob(Sample sample) {
@@ -121,6 +123,9 @@ final class SampleCatalog {
             for(int offset=0,page=0;offset<all.rows.size();offset+=32,page++){
                 var data=new ReportData();data.values.putAll(all.values);data.values.put("ページ","Page-"+(page+1));
                 data.rows.addAll(all.rows.subList(offset,Math.min(offset+32,all.rows.size())));
+                // D-37：zip2 の網掛け（16 回の繰返しの四角）は、書いた行にだけ描く（書かなければ 1 行目に 1 回だけ。原本 Reports.net と同じ）。
+                // 先頭の 16 行に値 null を書く（行は写してから書き、全体のデータは変えない）。
+                if(page>=5)for(int i=0;i<Math.min(16,data.rows.size());i++){var row=new LinkedHashMap<String,Object>(data.rows.get(i));row.put("網掛け",null);data.rows.set(i,row);}
                 pages.add(new SamplePage(page<5?first:second,data,0));
             }
             return new Sample("郵便番号一覧",first,all,List.copyOf(pages));
@@ -180,6 +185,10 @@ final class SampleCatalog {
     private static void materializePackagedImages(Map<String,Object> values) throws IOException {
         for (var key : List.of("画像1", "画像2", "Image1")) {
             var file=values.get(key); if(file==null) continue;
+            // 同梱画像は資産フォルダー（/legacy-images/）の直下だけ。区切りや .. を含む名前で外へ出さない。
+            if(file instanceof String blank&&blank.isBlank())continue;
+            if(!(file instanceof String name)||name.contains("/")||name.contains("\\")||name.contains("..")||name.contains(":"))
+                throw new IOException("同梱画像の名前が不正です: "+key);
             try(var input=SampleCatalog.class.getResourceAsStream("/legacy-images/"+file)) {
                 if(input!=null) values.put(key,input.readAllBytes());
             }

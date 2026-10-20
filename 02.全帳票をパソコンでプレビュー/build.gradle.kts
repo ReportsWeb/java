@@ -8,7 +8,7 @@ repositories { mavenCentral() }
 javafx { version = "21.0.6"; modules("javafx.controls", "javafx.swing") }
 
 dependencies {
-    implementation("ac.pao:reports-java-engine:1.0.0")
+    implementation("ac.pao:reports-java-engine:1.1.0")
     implementation("org.xerial:sqlite-jdbc:3.53.2.1")
 }
 

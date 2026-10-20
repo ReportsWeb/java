@@ -76,7 +76,7 @@ public final class QuickDesign extends JFrame {
                 var renderer=new ReportRenderer();
                 if(renderer.pageCount(doc,data)!=1)throw new IllegalArgumentException("この最初のサンプルでは1ページのデザインを使ってください。");
                 var image=renderer.render(doc,data,RenderOptions.preview());
-                new PdfExporter().exportPages(List.of(new PdfExporter.Page(doc,data,0)),work.resolve("quick-report.pdf"),PdfExporter.Options.image(),RenderControl.none());
+                new PdfExporter().exportPages(List.of(new PdfExporter.Page(doc,data,0)),work.resolve("quick-report.pdf"),PdfExporter.Options.vector(300,List.of()),RenderControl.none()); // PR-343：既定はベクター PDF（バーコードが読める）
                 var job=new PreviewJob();job.name="編集した帳票";job.pages.add(new PreviewJob.Page(doc,data,0));
                 new PreviewJobIO().write(work.resolve("quick-report.prepej"),job);
                 return new ImageIcon(image);

@@ -69,7 +69,7 @@ public final class QuickReport {
                 job.pages.stream()
                         .map(value -> new PdfExporter.Page(value.definition, value.data, value.sourcePage))
                         .toList(),
-                pdf, PdfExporter.Options.image(), RenderControl.none());
+                pdf, PdfExporter.Options.vector(300, java.util.List.of()), RenderControl.none()); // PR-343：既定はベクター PDF（バーコードが読める）
 
         verify(prepej, svg, pdf);
         System.out.println("作成完了: " + output);

@@ -45,7 +45,11 @@
     pdfUrl = null,
     searchHits = [],
     openedPrintData = null,
-    hostBlank = false;
+    hostBlank = false,
+    // ［連続］表示の状態。全ページ分の枠（高さ）だけを置き、見えている付近のページだけを取りに行く。
+    continuousView = null,
+    continuousScrollFrame = 0,
+    printingAll = false;
   const $ = (s) => root.querySelector(s),
     $$ = (s) => [...root.querySelectorAll(s)],
     selected = () => state.catalog.find((x) => x.id === state.sampleId);
@@ -249,22 +253,27 @@
       throw Error("帳票エンジンを確認できません");
     return r.text();
   }
+  function naturalSize(svg) {
+    const vb = svg.viewBox?.baseVal,
+      w = vb?.width || Number(svg.getAttribute("width")) || 794,
+      h = vb?.height || Number(svg.getAttribute("height")) || 1123;
+    const millimetres = /mm\s*$/i.test(svg.getAttribute("width") || "");
+    // Java/Python SVGs use millimetres. The .NET renderer emits PDF-point
+    // coordinates (72/inch). CSS uses 96px/inch, so both need a physical
+    // 100% conversion instead of treating their numeric coordinates as px.
+    const cssUnit = millimetres ? 96 / 25.4 : cfg.engineHeader === "DotNet" ? 96 / 72 : 1;
+    return { width: w * cssUnit, height: h * cssUnit };
+  }
   function scale() {
     const box = $("#npPages"),
       pages = $$(".native-page");
     for (const p of pages) {
       const svg = p.querySelector("svg");
-      if (!svg) continue;
-      const vb = svg.viewBox?.baseVal,
-        w = vb?.width || Number(svg.getAttribute("width")) || 794,
-        h = vb?.height || Number(svg.getAttribute("height")) || 1123;
-      const millimetres = /mm\s*$/i.test(svg.getAttribute("width") || "");
-      // Java/Python SVGs use millimetres. The .NET renderer emits PDF-point
-      // coordinates (72/inch). CSS uses 96px/inch, so both need a physical
-      // 100% conversion instead of treating their numeric coordinates as px.
-      const cssUnit = millimetres ? 96 / 25.4 : cfg.engineHeader === "DotNet" ? 96 / 72 : 1;
-      const naturalWidth = w * cssUnit,
-        naturalHeight = h * cssUnit;
+      // ［連続］のまだ取っていないページは、取ったページの大きさで枠を確保する。
+      const natural = svg ? naturalSize(svg) : continuousView?.natural;
+      if (!natural) continue;
+      const naturalWidth = natural.width,
+        naturalHeight = natural.height;
       let mode = state.zoom;
       if (mode === "auto") mode = box.clientWidth < 768 ? "fit" : "100";
       const factor =
@@ -308,7 +317,10 @@
         pdfUrl = isOpenedDocument() ? url : null;
         $("#npPages").innerHTML =
           `<object class="native-pdf" data="${url}" type="application/pdf"></object>`;
+      } else if (state.viewMode === "continuous" && !printingAll) {
+        if (!(await renderContinuous(item, mine))) return;
       } else {
+        continuousView = null;
         const indexes =
           state.viewMode === "single"
             ? [state.pageIndex]
@@ -340,10 +352,166 @@
       }
     }
   }
+  // ［連続］表示（1.0.1 試験 N2）。WASM のプレビュアーと同じく、全ページ分の高さを
+  // 枠で確保し、見えている付近のページだけを取りに行く。スクロールに合わせて
+  // ページ番号を変え、ボタン・ページ番号の欄で移動したときはそのページまでスクロールする。
+  const CONTINUOUS_KEEP = 20;
+  function continuousActive() {
+    return !!continuousView && continuousView.token === token && state.viewMode === "continuous" && state.outputView === "svg";
+  }
+  function fillPage(index, svg) {
+    const el = $("#npPages").children[index];
+    if (!el || el.dataset.loaded === "1") return;
+    el.innerHTML = svg;
+    el.dataset.loaded = "1";
+    el.classList.remove("native-page-pending");
+    const drawn = el.querySelector("svg");
+    if (drawn && !continuousView.natural) continuousView.natural = naturalSize(drawn);
+  }
+  function clearPage(el) {
+    if (el.dataset.loaded !== "1") return;
+    el.replaceChildren();
+    el.dataset.loaded = "";
+    el.classList.add("native-page-pending");
+  }
+  function pageTop(el) {
+    const box = $("#npPages");
+    return el.getBoundingClientRect().top - box.getBoundingClientRect().top + box.scrollTop;
+  }
+  /** スクロール位置の先頭に見えているページ。末尾までスクロールしたら最終ページ。 */
+  function pageAtScroll() {
+    const box = $("#npPages"),
+      pages = box.children,
+      count = pages.length;
+    if (!count) return 0;
+    if (box.scrollTop > 0 && box.scrollTop >= box.scrollHeight - box.clientHeight - 1) return count - 1;
+    const y = box.scrollTop + 1;
+    let low = 0,
+      high = count - 1;
+    while (low < high) {
+      const mid = (low + high + 1) >> 1;
+      // ページの上の隙間は、そのページに含める（前のページはもう見えていない）。
+      if (pageTop(pages[mid]) - 18 <= y) low = mid;
+      else high = mid - 1;
+    }
+    return low;
+  }
+  function visibleRange() {
+    const box = $("#npPages"),
+      pages = box.children,
+      first = pageAtScroll();
+    let last = first;
+    const bottom = box.scrollTop + box.clientHeight * 1.5;
+    while (last + 1 < pages.length && last - first < CONTINUOUS_KEEP && pageTop(pages[last + 1]) <= bottom) last++;
+    return [Math.max(0, first - 1), Math.min(pages.length - 1, last + 1)];
+  }
+  function scrollToPage(index) {
+    const box = $("#npPages"),
+      el = box.children[index];
+    if (!el) return;
+    box.scrollTop = index === 0 ? 0 : pageTop(el) - 18;
+    // この位置はボタン・ページ番号の欄などで移動した結果。末尾近くでページの先頭まで
+    // スクロールできなくても、指定したページ番号を書き換えない。
+    continuousView.navigatedScrollTop = box.scrollTop;
+  }
+  async function loadVisiblePages(mine) {
+    if (!continuousActive() || mine !== token) return;
+    const view = continuousView,
+      box = $("#npPages"),
+      pages = box.children,
+      [from, to] = visibleRange();
+    // 遠く離れたページは枠に戻し、画面に置く SVG の数を抑える。
+    for (const el of box.querySelectorAll(".native-page[data-loaded='1']")) {
+      const i = Number(el.dataset.page);
+      if (i < from - CONTINUOUS_KEEP || i > to + CONTINUOUS_KEEP) clearPage(el);
+    }
+    for (let i = from; i <= to; i++) {
+      if (pages[i]?.dataset.loaded === "1" || view.loading.has(i)) continue;
+      view.loading.add(i);
+      try {
+        const svg = view.cache.get(i) ?? (await fetchSvg(i, abort.signal));
+        if (view !== continuousView || mine !== token) return;
+        view.cache.set(i, svg);
+        if (view.cache.size > CONTINUOUS_KEEP * 4) view.cache.delete(view.cache.keys().next().value);
+        // 上にあるページの高さが変わっても、見ている位置を動かさない。
+        const anchor = pages[pageAtScroll()],
+          offset = anchor ? box.scrollTop - pageTop(anchor) : 0,
+          navigated = view.navigatedScrollTop != null && Math.abs(box.scrollTop - view.navigatedScrollTop) < 2;
+        fillPage(i, svg);
+        scale();
+        if (anchor) box.scrollTop = pageTop(anchor) + offset;
+        if (navigated) view.navigatedScrollTop = box.scrollTop;
+      } finally {
+        view.loading.delete(i);
+      }
+    }
+  }
+  async function renderContinuous(item, mine) {
+    const first = await fetchSvg(state.pageIndex, abort.signal);
+    if (mine !== token) return false;
+    const box = $("#npPages");
+    box.className = "native-pages continuous";
+    box.innerHTML = Array.from(
+      { length: item.pages },
+      (_, i) => `<div class="native-page native-page-pending" data-page="${i}"></div>`,
+    ).join("");
+    continuousView = { token: mine, natural: null, cache: new Map([[state.pageIndex, first]]), loading: new Set(), navigatedScrollTop: null };
+    fillPage(state.pageIndex, first);
+    scale();
+    scrollToPage(state.pageIndex);
+    await loadVisiblePages(mine);
+    if (mine !== token) return false;
+    scrollToPage(state.pageIndex);
+    findMatches(false);
+    return true;
+  }
+  function syncContinuousScroll() {
+    if (!continuousActive()) return;
+    const view = continuousView,
+      box = $("#npPages");
+    if (view.navigatedScrollTop != null && Math.abs(box.scrollTop - view.navigatedScrollTop) < 2) {
+      void loadVisiblePages(token);
+      return;
+    }
+    view.navigatedScrollTop = null;
+    const index = pageAtScroll();
+    if (index !== state.pageIndex) {
+      state.pageIndex = index;
+      $("#npPage").value = String(index + 1);
+      emit("page-changed");
+    }
+    void loadVisiblePages(token);
+  }
   function go(n) {
-    state.pageIndex = Math.max(0, Math.min(state.pageCount - 1, n));
+    // 数字にならない値（NaN）では移動しない（1.0.1 試験 N7）。
+    if (!Number.isFinite(n)) n = state.pageIndex;
+    state.pageIndex = Math.max(0, Math.min(state.pageCount - 1, Math.trunc(n)));
     emit("page-changed");
+    if (continuousActive()) {
+      $("#npPage").value = String(state.pageIndex + 1);
+      scrollToPage(state.pageIndex);
+      return loadVisiblePages(token).then(() => {
+        if (continuousActive()) scrollToPage(state.pageIndex);
+      });
+    }
     return render();
+  }
+  /** ページ番号の欄。数字（全角を含む）だけを受け付け、それ以外は元の番号に戻す。 */
+  function commitPageInput(input) {
+    const text = input.value.normalize("NFKC").trim();
+    if (!/^\d+$/.test(text)) {
+      input.value = String(state.pageIndex + 1);
+      if (text) setStatus(`ページ番号は 1〜${state.pageCount} の数字で入力してください。`);
+      return;
+    }
+    return go(Number(text) - 1);
+  }
+  /** 倍率を変えても、［連続］では今のページを先頭に保つ。 */
+  function zoomContinuous() {
+    scale();
+    if (!continuousActive()) return;
+    scrollToPage(state.pageIndex);
+    void loadVisiblePages(token);
   }
   function findMatches(move = true, direction = 1, all = false) {
     const q = $("#npQuery")?.value.trim() || "";
@@ -398,7 +566,13 @@
       previousOutput = state.outputView;
     state.viewMode = "continuous";
     state.outputView = "svg";
-    await render();
+    // 印刷は全ページが要るので、［連続］の部分読み込みを使わない。
+    printingAll = true;
+    try {
+      await render();
+    } finally {
+      printingAll = false;
+    }
     window.addEventListener("afterprint", () => void render(), { once: true });
     window.print();
     state.viewMode = previousMode;
@@ -444,11 +618,18 @@
     on("#npPrev", "click", () => go(state.pageIndex - 1));
     on("#npNext", "click", () => go(state.pageIndex + 1));
     on("#npLast", "click", () => go(state.pageCount - 1));
-    on("#npPage", "change", (e) => go(Number(e.target.value) - 1));
+    on("#npPage", "change", (e) => commitPageInput(e.target));
     on("#npZoom", "change", (e) => {
       state.zoom = e.target.value;
-      scale();
+      zoomContinuous();
       emit("zoom-changed");
+    });
+    on("#npPages", "scroll", () => {
+      if (!continuousActive() || continuousScrollFrame) return;
+      continuousScrollFrame = requestAnimationFrame(() => {
+        continuousScrollFrame = 0;
+        syncContinuousScroll();
+      });
     });
     $$("[data-layout]").forEach(
       (b) =>
@@ -510,7 +691,7 @@
           applyChrome();
         }),
     );
-    new ResizeObserver(scale).observe($("#npPages"));
+    new ResizeObserver(() => zoomContinuous()).observe($("#npPages"));
     document.addEventListener("keydown", (e) => {
       if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "t") {
         state.chrome.toolbar = true;
@@ -536,7 +717,7 @@
     setZoom: (v) => {
       state.zoom = String(v);
       $("#npZoom").value = state.zoom;
-      scale();
+      zoomContinuous();
       emit("zoom-changed");
     },
     setViewMode: (v) => {

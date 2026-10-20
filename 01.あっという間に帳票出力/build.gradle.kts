@@ -6,7 +6,7 @@ repositories { mavenCentral() }
 
 dependencies {
     // Reports.Web Pure Java engine (trial) from Maven Central
-    implementation("ac.pao:reports-java-engine:1.0.0")
+    implementation("ac.pao:reports-java-engine:1.1.0")
 }
 
 application {

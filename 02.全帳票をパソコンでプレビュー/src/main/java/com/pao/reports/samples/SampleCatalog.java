@@ -122,6 +122,9 @@ final class SampleCatalog {
             for(int offset=0,page=0;offset<all.rows.size();offset+=32,page++){
                 var data=new ReportData();data.values.putAll(all.values);data.values.put("ページ","Page-"+(page+1));
                 data.rows.addAll(all.rows.subList(offset,Math.min(offset+32,all.rows.size())));
+                // D-37：zip2 の網掛け（16 回の繰返しの四角）は、書いた行にだけ描く（書かなければ 1 行目に 1 回だけ。原本 Reports.net と同じ）。
+                // 先頭の 16 行に値 null を書く（行は写してから書き、全体のデータは変えない）。
+                if(page>=5)for(int i=0;i<Math.min(16,data.rows.size());i++){var row=new LinkedHashMap<String,Object>(data.rows.get(i));row.put("網掛け",null);data.rows.set(i,row);}
                 pages.add(new SamplePage(page<5?first:second,data,0));
             }
             return new Sample("郵便番号一覧",first,all,List.copyOf(pages));

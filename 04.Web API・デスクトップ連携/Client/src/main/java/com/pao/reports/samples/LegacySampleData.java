@@ -17,6 +17,8 @@ final class LegacySampleData {
     private static final NumberFormat NUMBER = NumberFormat.getIntegerInstance(Locale.JAPAN);
     /** ACE OLE DB result order for the legacy query (the SQL does not order by product code). */
     private static final List<String> LEGACY_PRODUCT_ORDER=List.of("1234567890125","1234567890124","1234567890123","1234567890146","1234567890139","1234567890142","1234567890147","1234567890149","1234567890148","1234567890127","1234567890133","1234567890129","1234567890132","1234567890137","1234567890143","1234567890128","1234567890134","1234567890144","1234567890135","1234567890136","1234567890126","1234567890131","1234567890130","1234567890138","1234567890141","1234567890145","1234567890140");
+    /** 見積書.prepd の明細の枠（Repeat=7 の四角）。 */
+    private static final List<String> ESTIMATE_FRAMES=List.of("品番白","品名白","数量白","単価白","金額白","Square10","単価青","Square5","品名青","品番青","数量青","金額青");
     private LegacySampleData() {}
 
     static ReportData load(String resource, String sample) throws IOException {
@@ -63,7 +65,11 @@ final class LegacySampleData {
             var row = new LinkedHashMap<String,Object>();
             row.put("品番", source.get("品番")); row.put("品名", source.get("品名"));
             row.put("数量", text(source.get("数量"))); row.put("単価", integer(source.get("単価")));
-            row.put("金額", integer(source.get("金額"))); result.rows.add(row);
+            row.put("金額", integer(source.get("金額")));
+            // D-37：明細の枠（7 回の繰返しの四角）は、書いた行にだけ描く（書かなければ 1 行目に 1 回だけ。原本 Reports.net と同じ）。
+            // 明細のある行の数だけ、枠に値 null を書く。
+            if (result.rows.size() < 7) for (var frame : ESTIMATE_FRAMES) row.put(frame, null);
+            result.rows.add(row);
         }
         return result;
     }
@@ -99,6 +105,8 @@ final class LegacySampleData {
         for (var source : rows(sheets, "郵便番号テーブル")) {
             var row = new LinkedHashMap<String,Object>();
             row.put("郵便番号", source.get("郵便番号")); row.put("市区町村", source.get("市区町村")); row.put("住所", source.get("住所"));
+            // D-37：繰返しの罫線は、書いた行にだけ描く（書かなければ 1 行目に 1 回だけ。原本 Reports.net と同じ）。行ごとに値 null を書く。
+            row.put("横罫線", null);
             result.rows.add(row);
         }
         return result;
@@ -130,7 +138,10 @@ final class LegacySampleData {
 
     @SuppressWarnings("unchecked") private static List<Map<String,Object>> rows(Map<String,Object> sheets,String name) { return (List<Map<String,Object>>)sheets.get(name); }
     private static Map<String,String> index(List<Map<String,Object>> rows,String key,String value){var result=new HashMap<String,String>();for(var row:rows)result.put(text(row.get(key)),text(row.get(value)));return result;}
-    private static LinkedHashMap<String,Object> blankProductRow(){var row=new LinkedHashMap<String,Object>();row.put("大分類","");row.put("小分類","");row.put("品番","");row.put("品名","");return row;}
+    private static LinkedHashMap<String,Object> blankProductRow(){var row=new LinkedHashMap<String,Object>();row.put("大分類","");row.put("小分類","");row.put("品番","");row.put("品名","");
+        // D-37：表の枠（繰返しの四角）は、書いた行にだけ描く（書かなければ 1 行目に 1 回だけ。原本 Reports.net と同じ）。行ごとに値 null を書く。
+        for(var frame:new String[]{"枠_大分類","枠_小分類","枠_品番","枠_品名"})row.put(frame,null);
+        return row;}
     private static LinkedHashMap<String,Object> subtotal(String label,int count){var row=blankProductRow();row.put("小分類",label);row.put("品番",count+" 冊");return row;}
     private static String text(Object value){return value==null?"":String.valueOf(value);}
     private static long whole(Object value){return value instanceof Number n?n.longValue():new BigDecimal(text(value)).longValue();}

@@ -93,6 +93,8 @@
   display: flex;
   align-items: flex-start;
   gap: 18px;
+  /* ［連続］表示はページを枠と入れ替えるので、ブラウザーの位置の自動補正を止める。 */
+  overflow-anchor: none;
 }
 .native-pages.single {
   justify-content: center;

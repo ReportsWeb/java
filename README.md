@@ -48,7 +48,7 @@ cd "java/01.あっという間に帳票出力"
 
 ```kotlin
 // build.gradle.kts
-dependencies { implementation("ac.pao:reports-java-engine:1.0.0") }
+dependencies { implementation("ac.pao:reports-java-engine:1.1.0") }
 ```
 
 ```xml
@@ -56,7 +56,7 @@ dependencies { implementation("ac.pao:reports-java-engine:1.0.0") }
 <dependency>
   <groupId>ac.pao</groupId>
   <artifactId>reports-java-engine</artifactId>
-  <version>1.0.0</version>
+  <version>1.1.0</version>
 </dependency>
 ```
 
